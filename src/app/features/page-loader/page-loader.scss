@@ -12,7 +12,10 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate3d(-50%, -50%, 0);
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    transform-origin: left center;
+    will-change: top, left, opacity, transform;
 
     height: 60px;
 
@@ -50,6 +53,7 @@
     .loaded {
         .loader {
             animation: 0.7s logo-disappear-mobile ease-in-out forwards;
+            -webkit-animation: 0.7s logo-disappear-mobile ease-in-out forwards;
         }
     }
 }
@@ -72,10 +76,9 @@
 
 @keyframes logo-disappear-mobile {
     90% {
-        height: 40px;
         top: 45px;
         left: var(--space-lg);
-        transform: translate(0, -50%);
+        transform: translate3d(0, -50%, 0) scale(0.6667);
     }
 
     99% {
@@ -84,10 +87,31 @@
 
     100% {
         opacity: 0;
-        height: 40px;
         top: 45px;
         left: var(--space-lg);
-        transform: translate(0, -50%);
+        transform: translate3d(0, -50%, 0) scale(0.6667);
+        pointer-events: none;
+    }
+}
+
+@-webkit-keyframes logo-disappear-mobile {
+    90% {
+        top: 45px;
+        left: var(--space-lg);
+        -webkit-transform: translate3d(0, -50%, 0) scale(0.6667);
+                transform: translate3d(0, -50%, 0) scale(0.6667);
+    }
+
+    99% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        top: 45px;
+        left: var(--space-lg);
+        -webkit-transform: translate3d(0, -50%, 0) scale(0.6667);
+                transform: translate3d(0, -50%, 0) scale(0.6667);
         pointer-events: none;
     }
 }
