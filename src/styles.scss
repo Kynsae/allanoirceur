@@ -70,6 +70,7 @@ html {
 	overscroll-behavior: none;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
+	background-color: black;
 }
 
 *::-webkit-scrollbar {
@@ -78,7 +79,6 @@ html {
 
 body {
 	color: var(--white-100);
-	background-color: var(--black-000);
 	
 	font-family: 'BigShoulders-Regular';
 	font-size: 23px;
