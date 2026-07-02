@@ -1,6 +1,7 @@
+import { DOCUMENT } from '@angular/common';
 import { inject, Injectable, signal, effect } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Event, NavigationStart, Router } from '@angular/router';
+import { Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { ScrollManager } from './scroll-manager';
 
@@ -20,10 +21,14 @@ export class NavigationLoaderManager {
   private sourceProgress: number[] = [];
   private scrollTimeout: any;
   private loadingStartedAt = 0;
+  private lockedScrollY = 0;
+  private pendingNavigationScrollY = 0;
+  private resetScrollOnUnlock = false;
   
   private readonly MIN_LOADING_DURATION_MS = 2500;
-  private readonly SCROLL_LIMITER_WAIT_MS = 2000;
+  private readonly SCROLL_LIMITER_WAIT_MS = 1000;
 
+  private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
   private readonly scrollManager = inject(ScrollManager);
   
@@ -33,10 +38,36 @@ export class NavigationLoaderManager {
       filter((event: Event) => event instanceof NavigationStart),
       takeUntilDestroyed()
     ).subscribe(() => {
+      this.pendingNavigationScrollY = window.scrollY;
       this.clearPendingLoadWork();
       this.loadingPercentage.set(0);
       this.sourceProgress = [];
       this.isLoading.set(true);
+      this.hasPageLoaded.set(false);
+      this.loadingStartedAt = performance.now();
+      this.resetScrollOnUnlock = true;
+      this.scrollManager.scrollTo(0);
+    });
+
+    this.router.events.pipe(
+      filter((event: Event) =>
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      ),
+      takeUntilDestroyed()
+    ).subscribe((event) => {
+      if (event instanceof NavigationCancel || event instanceof NavigationError) {
+        this.resetScrollOnUnlock = false;
+        this.scrollManager.scrollTo(this.pendingNavigationScrollY);
+      }
+
+      if (this.sourceProgress.length > 0) {
+        return;
+      }
+
+      this.sourceProgress = [100];
+      this.updateLoadingPercentage();
     });
 
     // Sync scroll behaviour with loading state.
@@ -44,10 +75,12 @@ export class NavigationLoaderManager {
       if (this.scrollTimeout) clearTimeout(this.scrollTimeout);
 
       if(this.isLoading()) {
+        this.lockScroll();
         this.scrollManager.stop();
       }
       else {
         this.scrollTimeout = setTimeout(() => {
+          this.unlockScroll();
           this.scrollManager.start();
         }, this.SCROLL_LIMITER_WAIT_MS);
       }
@@ -146,5 +179,50 @@ export class NavigationLoaderManager {
       cancelAnimationFrame(this.progressAnimationFrame);
       this.progressAnimationFrame = null;
     }
+  }
+
+  private lockScroll(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const html = this.document.documentElement;
+    const body = this.document.body;
+
+    this.lockedScrollY = window.scrollY;
+
+    html.style.overflow = 'hidden';
+    html.style.touchAction = 'none';
+
+    body.style.overflow = 'hidden';
+    body.style.touchAction = 'none';
+    body.style.position = 'fixed';
+    body.style.inset = '0';
+    body.style.width = '100%';
+    body.style.top = `-${this.lockedScrollY}px`;
+  }
+
+  private unlockScroll(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const html = this.document.documentElement;
+    const body = this.document.body;
+
+    html.style.overflow = '';
+    html.style.touchAction = '';
+
+    body.style.overflow = '';
+    body.style.touchAction = '';
+    body.style.position = '';
+    body.style.inset = '';
+    body.style.width = '';
+    body.style.top = '';
+
+    const targetScrollY = this.resetScrollOnUnlock ? 0 : this.lockedScrollY;
+
+    this.scrollManager.scrollTo(targetScrollY);
+    this.resetScrollOnUnlock = false;
   }
 }

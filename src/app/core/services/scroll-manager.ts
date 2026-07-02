@@ -17,6 +17,10 @@ export class ScrollManager {
    * Initializes scroll: Lenis on desktop, native scroll listener on mobile. 
    */
   public init(): void {
+    if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
     this.lenis = new Lenis({
       autoRaf: true,
       lerp: .12,
@@ -40,5 +44,18 @@ export class ScrollManager {
    */
   public start(): void {
     this.lenis?.start();
+  }
+
+  /**
+   * Forces the document scroll position to a specific value.
+   */
+  public scrollTo(position: number): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    this.lenis?.scrollTo(position, { immediate: true, force: true });
+    window.scrollTo({ top: position, behavior: 'auto' });
+    this.actualScroll.set(position);
   }
 }
