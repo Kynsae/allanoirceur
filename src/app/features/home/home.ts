@@ -1,4 +1,4 @@
-import { afterNextRender, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { afterNextRender, Component, DestroyRef, ElementRef, inject, ViewChild } from '@angular/core';
 import { ShowEvent } from '../../core/models/show-event.model';
 import { EventPreview } from '../../shared/components/event-preview/event-preview';
 import { Parallax } from '../../core/services/parallax';
@@ -20,6 +20,9 @@ import { NavigationLoaderManager } from '../../core/services/navigation-loader-m
   styleUrl: './home.scss',
 })
 export class Home {
+  private static readonly VIDEO_SOURCE_INDEX = 0;
+  private static readonly VIDEO_LOAD_COMPLETE_THRESHOLD_SECONDS = 0.25;
+
   @ViewChild('landingVideo')
   private readonly landingVideo?: ElementRef<HTMLVideoElement>;
 
@@ -29,6 +32,7 @@ export class Home {
   private readonly parallax = inject(Parallax);
   private readonly scrollManager = inject(ScrollManager);
   private readonly loaderManager = inject(NavigationLoaderManager);
+  private readonly destroyRef = inject(DestroyRef);
   
   public readonly featuredAlbum = RECORDS[0];
 
@@ -38,14 +42,9 @@ export class Home {
     this.loaderManager.startLoading(1);
     
     afterNextRender(() => {
+      this.setupVideoLoadingTracking();
       this.setupVideoAutoplay();
     });
-  }
-
-  lastPercent = -1;
-
-  public videoLoad(event: any) {
-    this.loaderManager.updateSourceProgress(0, 100);
   }
 
   private setupVideoAutoplay(): void {
@@ -73,6 +72,77 @@ export class Home {
     document.addEventListener('visibilitychange', tryPlay);
     window.addEventListener('focus', tryPlay);
     window.addEventListener('pageshow', tryPlay);
+
+    this.destroyRef.onDestroy(() => {
+      video.removeEventListener('canplay', tryPlay);
+      document.removeEventListener('visibilitychange', tryPlay);
+      window.removeEventListener('focus', tryPlay);
+      window.removeEventListener('pageshow', tryPlay);
+    });
+  }
+
+  private setupVideoLoadingTracking(): void {
+    const video = this.landingVideo?.nativeElement;
+
+    if (!video) {
+      return;
+    }
+
+    const syncProgress = () => {
+      const percentage = this.calculateBufferedPercentage(video);
+      this.loaderManager.updateSourceProgress(Home.VIDEO_SOURCE_INDEX, percentage);
+
+      if (percentage >= 100 || this.hasVideoLoadedEnough(video)) {
+        this.loaderManager.updateSourceProgress(Home.VIDEO_SOURCE_INDEX, 100);
+      }
+    };
+
+    const markAsLoaded = () => {
+      this.loaderManager.updateSourceProgress(Home.VIDEO_SOURCE_INDEX, 100);
+    };
+
+    video.addEventListener('loadedmetadata', syncProgress);
+    video.addEventListener('progress', syncProgress);
+    video.addEventListener('durationchange', syncProgress);
+    video.addEventListener('canplaythrough', markAsLoaded);
+    video.addEventListener('error', markAsLoaded);
+
+    this.destroyRef.onDestroy(() => {
+      video.removeEventListener('loadedmetadata', syncProgress);
+      video.removeEventListener('progress', syncProgress);
+      video.removeEventListener('durationchange', syncProgress);
+      video.removeEventListener('canplaythrough', markAsLoaded);
+      video.removeEventListener('error', markAsLoaded);
+    });
+
+    syncProgress();
+  }
+
+  private calculateBufferedPercentage(video: HTMLVideoElement): number {
+    if (!Number.isFinite(video.duration) || video.duration <= 0 || video.buffered.length === 0) {
+      return 0;
+    }
+
+    let bufferedDuration = 0;
+
+    for (let index = 0; index < video.buffered.length; index += 1) {
+      bufferedDuration += video.buffered.end(index) - video.buffered.start(index);
+    }
+
+    return Math.round(Math.min(100, (bufferedDuration / video.duration) * 100));
+  }
+
+  private hasVideoLoadedEnough(video: HTMLVideoElement): boolean {
+    if (video.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
+      return true;
+    }
+
+    if (!Number.isFinite(video.duration) || video.duration <= 0 || video.buffered.length === 0) {
+      return false;
+    }
+
+    const lastBufferedSecond = video.buffered.end(video.buffered.length - 1);
+    return lastBufferedSecond >= video.duration - Home.VIDEO_LOAD_COMPLETE_THRESHOLD_SECONDS;
   }
 
   public lerp(

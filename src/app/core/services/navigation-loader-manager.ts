@@ -16,11 +16,13 @@ export class NavigationLoaderManager {
   public readonly loadingPercentage = signal(0);
   
   private minimumTimer: ReturnType<typeof setTimeout> | null = null;
+  private progressAnimationFrame: number | null = null;
   private sourceProgress: number[] = [];
   private scrollTimeout: any;
+  private loadingStartedAt = 0;
   
-  private readonly MIN_LOADING_DURATION_MS = 1000;
-  private readonly SCROLL_LIMITER_WAIT_MS = 900;
+  private readonly MIN_LOADING_DURATION_MS = 2500;
+  private readonly SCROLL_LIMITER_WAIT_MS = 2000;
 
   private readonly router = inject(Router);
   private readonly scrollManager = inject(ScrollManager);
@@ -31,6 +33,7 @@ export class NavigationLoaderManager {
       filter((event: Event) => event instanceof NavigationStart),
       takeUntilDestroyed()
     ).subscribe(() => {
+      this.clearPendingLoadWork();
       this.loadingPercentage.set(0);
       this.sourceProgress = [];
       this.isLoading.set(true);
@@ -61,11 +64,12 @@ export class NavigationLoaderManager {
    * @param numberOfSources Number of sources to track
    */
   public startLoading(numberOfSources: number): void {
-    if (this.minimumTimer) clearTimeout(this.minimumTimer);
+    this.clearPendingLoadWork();
     this.loadingPercentage.set(0);
     this.hasPageLoaded.set(false);
     this.isLoading.set(true);
     this.sourceProgress = new Array(numberOfSources).fill(0);
+    this.loadingStartedAt = performance.now();
   }
 
   /**
@@ -88,12 +92,59 @@ export class NavigationLoaderManager {
 
     const total = this.sourceProgress.reduce((sum, p) => sum + p, 0);
     const average = Math.round(total / this.sourceProgress.length);
-    this.loadingPercentage.set(average);
+    const elapsed = performance.now() - this.loadingStartedAt;
+    const minimumDurationProgress = Math.min(100, Math.round((elapsed / this.MIN_LOADING_DURATION_MS) * 100));
+    const visibleProgress = average >= 100 ? minimumDurationProgress : Math.min(average, minimumDurationProgress);
+
+    this.loadingPercentage.set(visibleProgress);
 
     if (average >= 100) {
-      this.minimumTimer = setTimeout(() => {
-        this.isLoading.set(false);
-      }, this.MIN_LOADING_DURATION_MS);
+      if (visibleProgress >= 100) {
+        this.completeLoading();
+        return;
+      }
+
+      this.scheduleProgressCompletion();
+    }
+  }
+
+  private scheduleProgressCompletion(): void {
+    if (this.progressAnimationFrame !== null) {
+      return;
+    }
+
+    const step = () => {
+      this.progressAnimationFrame = null;
+      this.updateLoadingPercentage();
+
+      if (this.loadingPercentage() < 100 && this.isLoading()) {
+        this.scheduleProgressCompletion();
+      }
+    };
+
+    this.progressAnimationFrame = requestAnimationFrame(step);
+  }
+
+  private completeLoading(): void {
+    if (this.minimumTimer) {
+      return;
+    }
+
+    this.minimumTimer = setTimeout(() => {
+      this.minimumTimer = null;
+      this.isLoading.set(false);
+    }, 0);
+  }
+
+  private clearPendingLoadWork(): void {
+    if (this.minimumTimer) {
+      clearTimeout(this.minimumTimer);
+      this.minimumTimer = null;
+    }
+
+    if (this.progressAnimationFrame !== null) {
+      cancelAnimationFrame(this.progressAnimationFrame);
+      this.progressAnimationFrame = null;
     }
   }
 }
