@@ -1,0 +1,41 @@
+<div class="container">
+    <svg class="icon icon-red" [class.loaded]="isLoaded()" xmlns="http://www.w3.org/2000/svg" width="62" height="109" fill="none">
+        <g filter="url(#a)">
+            <path stroke="red" stroke-width="14.2" d="M31 1v106M8 14l46 81m0-81L8 95" />
+        </g>
+        <defs>
+            <filter id="a" width="61.1" height="108.4" x="0" y="0" color-interpolation-filters="sRGB"
+                filterUnits="userSpaceOnUse">
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                <feTurbulence baseFrequency="0.15276136994361877 0.15276136994361877" numOctaves="3" seed="8749"
+                    type="fractalNoise" />
+                <feDisplacementMap width="100%" height="100%" in="shape" result="displacedImage" scale="2.8"
+                    xChannelSelector="R" yChannelSelector="G" />
+                <feMerge result="effect1_texture_95_70">
+                    <feMergeNode in="displacedImage" />
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <svg class="icon icon-black" [class.loaded-black]="isLoaded()" xmlns="http://www.w3.org/2000/svg" width="62" height="109" fill="none">
+        <g filter="url(#a)">
+            <path stroke="black" stroke-width="14.2" d="M31 1v106M8 14l46 81m0-81L8 95" />
+        </g>
+        <defs>
+            <filter id="a" width="61.1" height="108.4" x="0" y="0" color-interpolation-filters="sRGB"
+                filterUnits="userSpaceOnUse">
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                <feTurbulence baseFrequency="0.15276136994361877 0.15276136994361877" numOctaves="3" seed="8749"
+                    type="fractalNoise" />
+                <feDisplacementMap width="100%" height="100%" in="shape" result="displacedImage" scale="2.8"
+                    xChannelSelector="R" yChannelSelector="G" />
+                <feMerge result="effect1_texture_95_70">
+                    <feMergeNode in="displacedImage" />
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+</div>

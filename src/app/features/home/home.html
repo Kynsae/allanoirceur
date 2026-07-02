@@ -1,0 +1,72 @@
+<div class="landing-container">
+    <video
+        #landingVideo
+        class="landing-container-video"
+        [style.top.vh]="lerp(0, 50, 1, 1)"
+        muted
+        autoplay
+        playsinline
+        loop
+        preload="auto"
+        src="medias/videos/1.mp4"
+    ></video>
+
+    <div class="arrows">
+        <img src="icons/arrow-down.svg">
+
+        <img src="icons/arrow-down.svg">
+    </div>
+
+    <img class="separator-img" src="icons/sepa.svg">
+</div>
+
+<div class="wrapper">
+    <div class="events-container">
+        <h1 [style.margin-top.vw]="lerp(10, 0, 1, 2)">UPCOMMING</h1>
+        
+        <div class="events-container-title">
+            <h1>LIVE</h1>
+            <h1>2026</h1>
+        </div>
+
+        <div [style.margin-top.vw]="lerp(11, 0, 1, 2.5)" class="events-list">
+            @for (event of SHOW_EVENTS; track $index) {
+                <app-event-preview
+                    [showEvent]="event"
+                ></app-event-preview>
+
+                @if (!$last) {
+                    <div class="h-separator"></div>
+                }
+            }
+        </div>
+    </div>
+
+    <h1>LATEST RELEASE</h1>
+
+    <div #featuredAlbumSection class="latest-release-container">
+        <div
+            class="latest-release-featured-album"
+            [style.top.%]="lerpOffset(50, 60, 1.3, 1.0)"
+        >
+            <app-release-cover-shader
+                class="latest-release-cover-stack"
+                [imageSrc]="featuredAlbum.coverUrl"
+                imageAlt="The Fight Against The Devil cover"
+                [progress]="lerpOffset(0, 1, 1.3, 1.0)"
+            ></app-release-cover-shader>
+
+            <div [style.opacity]="lerpOffset(0, 1, 1.9, 1.1)" class="latest-release-links-container">
+                @for (link of featuredAlbum.links; track $index) {
+                    <app-link-preview
+                        [link]="link"
+                    ></app-link-preview>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        
+    </div>
+</div>

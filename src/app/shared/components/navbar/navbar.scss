@@ -1,0 +1,32 @@
+.container {
+    position: fixed;
+    width: 100vw;
+    height: 90px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: var(--space-lg);
+    box-sizing: border-box;
+    z-index: 3;
+}
+
+.logo-img {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    will-change: height;
+    cursor: pointer;
+
+    transition: transform 0.1s ease-in-out;
+
+    &:hover {
+        transform: translateX(-50%) scale(1.05);
+    }
+}
+
+nav {
+    cursor: pointer;
+    font-size: 26px;
+}

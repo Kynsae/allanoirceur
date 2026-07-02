@@ -1,0 +1,15 @@
+<div #coverStack class="release-cover-stack">
+    <canvas
+        #shaderCanvas
+        class="release-cover-shader"
+        [class.release-cover-shader--ready]="shaderReady"
+        aria-hidden="true"
+    ></canvas>
+
+    <img
+        class="release-cover-fallback"
+        [class.release-cover-fallback--hidden]="shaderReady"
+        [src]="imageSrc()"
+        [alt]="imageAlt()"
+    >
+</div>

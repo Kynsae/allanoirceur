@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="cell">
+        <p class="date">
+            {{ eventDate() | date:'MMM d, y' | uppercase }} — {{ eventDate() | date:'HH:mm' }}
+        </p>
+
+        <p class="place">
+            {{ showEvent().place }}
+        </p>
+    </div>
+
+    <div class="cell">{{ showEvent().city }}, {{ showEvent().country }}</div>
+
+    <a
+        [class.disabled]="showEvent().available == false"
+        [href]="showEvent().ticketUrl"
+        class="ticket-btn"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        TICKETS
+    </a>
+</div>

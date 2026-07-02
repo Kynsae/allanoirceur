@@ -1,0 +1,36 @@
+:host {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.reel {
+    display: grid;
+    width: max-content;
+    max-width: 100%;
+}
+
+.reel.fill {
+    width: 100%;
+}
+
+.reel.align-end {
+    justify-items: end;
+}
+
+.label {
+    grid-area: 1 / 1;
+    display: block;
+    width: auto;
+    text-align: left;
+    white-space: pre;
+    will-change: transform, opacity;
+}
+
+.reel.fill .label {
+    width: 100%;
+}
+
+.reel.align-end .label {
+    text-align: right;
+}

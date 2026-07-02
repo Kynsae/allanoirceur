@@ -1,0 +1,19 @@
+<span class="reel" [class.align-end]="align() === 'end'" [class.fill]="fill()" [attr.aria-label]="currentText()">
+    <span
+        class="label"
+        aria-hidden="true"
+        [style.transform]="outgoingTransform()"
+        [style.opacity]="outgoingOpacity()"
+    >
+        {{ fromText() }}
+    </span>
+
+    <span
+        class="label"
+        aria-hidden="true"
+        [style.transform]="incomingTransform()"
+        [style.opacity]="incomingOpacity()"
+    >
+        {{ toText() }}
+    </span>
+</span>

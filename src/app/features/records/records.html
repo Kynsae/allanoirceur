@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="grid">
+        <div class="record-infos left-infos" [style.opacity]="infosOpacity()">
+            <p class="record-year">
+                <app-scroll-text-reel
+                    [fromText]="fromRecord().releaseYear"
+                    [toText]="toRecord().releaseYear"
+                    [progress]="transitionProgress()"
+                    [direction]="scrollDirection()"
+                />
+            </p>
+
+            <p class="record-type">
+                <app-scroll-text-reel
+                    [fromText]="fromRecord().type"
+                    [toText]="toRecord().type"
+                    [progress]="transitionProgress()"
+                    [direction]="scrollDirection()"
+                    align="end"
+                    [fill]="true"
+                />
+            </p>
+        </div>
+
+        @for (record of RECORDS; track $index) {
+            <article class="record-item">
+                <img #recordCover class="record-cover" [src]="record.coverUrl" [alt]="record.name" (load)="onCoverLoad()">
+
+                <div class="mobile-record-infos">
+                    <p class="mobile-record-name">{{ record.name }}</p>
+                    <p class="mobile-record-year">{{ record.releaseYear }}</p>
+                </div>
+            </article>
+        }
+
+        <div class="record-infos right-infos" [style.opacity]="infosOpacity()">
+            <p class="record-name">
+                <app-scroll-text-reel
+                    [fromText]="fromRecord().name"
+                    [toText]="toRecord().name"
+                    [progress]="transitionProgress()"
+                    [direction]="scrollDirection()"
+                />
+            </p>
+
+            <p class="record-position">
+                <app-scroll-text-reel
+                    [fromText]="fromPosition()"
+                    [toText]="toPosition()"
+                    [progress]="transitionProgress()"
+                    [direction]="scrollDirection()"
+                    align="end"
+                />
+            </p>
+        </div>
+    </div>
+</div>
