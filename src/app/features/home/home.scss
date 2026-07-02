@@ -117,6 +117,10 @@
     aspect-ratio: 1 / 1;
 }
 
+.featured-album-title {
+    text-align: center;
+}
+
 @media (max-width: 900px) {
     .latest-release-featured-album {
         width: min(calc(100vw - (var(--space-lg) * 2)), 420px);
@@ -124,5 +128,14 @@
 
     .latest-release-links-container {
         flex-direction: column;
+    }
+
+    .featured-album-title {
+        text-align: left;
+        font-size: 10.1vw;
+    }
+
+    .events-title {
+        font-size: 7.8vw;
     }
 }
