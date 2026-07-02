@@ -1,6 +1,6 @@
 @media (max-width: 690px) {
     .container {
-        height: 100vh !important;
+        height: var(--viewport-height) !important;
     }
 
     .links-container {
@@ -18,7 +18,7 @@
 .container {
     position: relative;
     width: 100vw;
-    height: 50vh;
+    height: var(--viewport-height-half);
 
     display: flex;
     align-items: center;

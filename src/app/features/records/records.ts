@@ -1,6 +1,7 @@
 import { afterNextRender, Component, computed, effect, ElementRef, HostListener, inject, OnDestroy, signal, viewChildren } from '@angular/core';
 import { ArtistRecord } from '../../core/models/artist-record.model';
 import { ScrollManager } from '../../core/services/scroll-manager';
+import { Viewport } from '../../core/services/viewport';
 import { ScrollTextReel } from '../../shared/components/scroll-text-reel/scroll-text-reel';
 import { RECORDS } from '../../core/datas/records.data';
 
@@ -24,6 +25,7 @@ export class Records implements OnDestroy {
   private readonly END_FADE_DISTANCE_FACTOR = 0.65;
   private readonly END_FADE_LEAD_FACTOR = 0.2;
   private readonly scrollManager = inject(ScrollManager);
+  private readonly viewport = inject(Viewport);
   private readonly recordCovers = viewChildren<ElementRef<HTMLImageElement>>('recordCover');
   private readonly coverCenters = signal<number[]>([]);
   private measureFrameId: number | null = null;
@@ -43,7 +45,7 @@ export class Records implements OnDestroy {
       };
     }
 
-    const viewportCenter = this.scrollManager.actualScroll() + window.innerHeight / 2;
+    const viewportCenter = this.scrollManager.actualScroll() + this.viewport.height() / 2;
 
     if (viewportCenter <= centers[0]!) {
       return {
@@ -109,11 +111,11 @@ export class Records implements OnDestroy {
     }
 
     const lastCenter = centers[centers.length - 1]!;
-    const previousCenter = centers.length > 1 ? centers[centers.length - 2]! : lastCenter - window.innerHeight / 2;
+    const previousCenter = centers.length > 1 ? centers[centers.length - 2]! : lastCenter - this.viewport.height() / 2;
     const fadeDistance = Math.max(120, (lastCenter - previousCenter) * this.END_FADE_DISTANCE_FACTOR);
     const fadeStart = lastCenter - fadeDistance * this.END_FADE_LEAD_FACTOR;
     const fadeEnd = fadeStart + fadeDistance;
-    const viewportCenter = this.scrollManager.actualScroll() + window.innerHeight / 2;
+    const viewportCenter = this.scrollManager.actualScroll() + this.viewport.height() / 2;
 
     if (viewportCenter <= fadeStart) {
       return 1;

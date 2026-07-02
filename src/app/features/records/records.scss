@@ -4,7 +4,7 @@
     justify-content: center;
     padding: var(--space-lg);
     box-sizing: border-box;
-    padding-top: calc(50vh - 20vw);
+    padding-top: calc(var(--viewport-height-half) - 20vw);
     margin-bottom: 200px;
 
     text-transform: uppercase;
@@ -94,7 +94,7 @@
 
 @media (max-width: 1099px) {
     .container {
-        padding-top: max(100px, calc(50vh - (100vw - var(--space-lg) * 2) / 2));
+        padding-top: max(100px, calc(var(--viewport-height-half) - (100vw - var(--space-lg) * 2) / 2));
     }
 
     .record-cover {

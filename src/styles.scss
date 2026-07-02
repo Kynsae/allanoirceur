@@ -116,6 +116,7 @@ CSS Custom Properties
 
 // COLORS
 :root {
+	--viewport-height: 100vh;
 	--white-100: #f0f0f0;
 	--white-200: #d5d5d5;
 
@@ -137,8 +138,16 @@ CSS Custom Properties
 	--main-400: #685FE8;
 }
 
+@supports (height: 100svh) {
+	:root {
+		--viewport-height: 100svh;
+	}
+}
+
 // OTHER
 :root {
+	--viewport-height-half: calc(var(--viewport-height) * 0.5);
+	--viewport-height-70: calc(var(--viewport-height) * 0.7);
 	--space-md: 23px;
 	--space-sm: calc(var(--space-md) / 2);
 	--space-lg: calc(var(--space-md) * 1.5);

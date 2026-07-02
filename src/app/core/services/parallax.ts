@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
+import { Viewport } from './viewport';
 
 /**
  * Provides scroll-based interpolation and animation utilities.
@@ -7,12 +8,13 @@ import { inject, Injectable, OnDestroy, PLATFORM_ID, signal } from '@angular/cor
 @Injectable({ providedIn: 'root' })
 export class Parallax implements OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly viewport = inject(Viewport);
   private viewportHeight = signal(0);
-  private resizeListener = () => this.viewportHeight.set(window.innerHeight);
+  private resizeListener = () => this.viewportHeight.set(this.viewport.height());
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
-      this.viewportHeight.set(window.innerHeight);
+      this.viewportHeight.set(this.viewport.height());
       window.addEventListener('resize', this.resizeListener);
     }
   }
