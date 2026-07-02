@@ -41,3 +41,17 @@
     color: var(--black-500);
     text-decoration: line-through;
 }
+
+@media (max-width: 900px) {
+    .container {
+        font-size: 20px;
+    }
+
+    .city {
+        display: none;
+    }
+
+    .ticket-btn {
+        padding-inline: var(--space-sm);
+    }
+}
