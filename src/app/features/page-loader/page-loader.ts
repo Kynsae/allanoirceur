@@ -1,4 +1,5 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { NavigationLoaderManager } from '../../core/services/navigation-loader-manager';
 
 @Component({
   selector: 'app-page-loader',
@@ -7,23 +8,14 @@ import { Component, computed, signal } from '@angular/core';
   styleUrl: './page-loader.scss',
 })
 export class PageLoader {
+  private readonly loaderManager = inject(NavigationLoaderManager);
+    
   private readonly maxRevealLength = 30;
-  public readonly loadingPercentage = signal<number>(0);
+  public readonly loadingPercentage = this.loaderManager.loadingPercentage;
+
   public readonly revealDasharray = computed(() => {
     const revealLength = (this.loadingPercentage() / 100) * this.maxRevealLength;
     return `${revealLength} 100`;
   });
   public readonly revealStrokeWidth = computed(() => (this.loadingPercentage() === 0 ? 0 : 18));
-
-  constructor() {
-    this.load();
-  }
-
-  private load(): void {
-    setTimeout(() => {
-      this.loadingPercentage.update((value) => Math.min(value + 3, 100));
-      if (this.loadingPercentage() >= 100) return;
-      this.load();
-    }, 100);
-  }
 }

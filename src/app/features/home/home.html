@@ -1,5 +1,6 @@
 <div class="landing-container">
     <video
+        (progress)="videoLoad($event)"
         #landingVideo
         class="landing-container-video"
         [style.top.vh]="lerp(0, 50, 1, 1)"

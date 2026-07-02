@@ -7,6 +7,7 @@ import { LinkPreview } from '../../shared/components/link-preview/link-preview';
 import { ReleaseCoverShader } from '../../shared/components/release-cover-shader/release-cover-shader';
 import { RECORDS } from '../../core/datas/records.data';
 import { SHOW_EVENTS } from '../../core/datas/show-events.data';
+import { NavigationLoaderManager } from '../../core/services/navigation-loader-manager';
 
 @Component({
   selector: 'app-home',
@@ -27,15 +28,24 @@ export class Home {
 
   private readonly parallax = inject(Parallax);
   private readonly scrollManager = inject(ScrollManager);
+  private readonly loaderManager = inject(NavigationLoaderManager);
   
   public readonly featuredAlbum = RECORDS[0];
 
   public readonly SHOW_EVENTS = SHOW_EVENTS;
 
   constructor() {
+    this.loaderManager.startLoading(1);
+    
     afterNextRender(() => {
       this.setupVideoAutoplay();
     });
+  }
+
+  lastPercent = -1;
+
+  public videoLoad(event: any) {
+    this.loaderManager.updateSourceProgress(0, 100);
   }
 
   private setupVideoAutoplay(): void {
