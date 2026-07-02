@@ -36,6 +36,7 @@ export class ReleaseCoverShader implements OnDestroy {
 
   private releaseShaderState: ReleaseShaderState | null = null;
   private readonly handleWindowResize = () => this.resizeShader();
+  private readyFrameId: number | null = null;
   public shaderReady = false;
 
   constructor() {
@@ -155,9 +156,7 @@ export class ReleaseCoverShader implements OnDestroy {
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
-      this.shaderReady = true;
-      this.resizeShader();
-      this.renderShader();
+      this.scheduleShaderReady();
     };
 
     image.onerror = () => {
@@ -166,6 +165,24 @@ export class ReleaseCoverShader implements OnDestroy {
 
     image.src = this.imageSrc();
     window.addEventListener('resize', this.handleWindowResize);
+  }
+
+  private scheduleShaderReady(): void {
+    if (this.readyFrameId !== null) {
+      return;
+    }
+
+    this.readyFrameId = window.requestAnimationFrame(() => {
+      this.readyFrameId = null;
+
+      if (!this.releaseShaderState) {
+        return;
+      }
+
+      this.shaderReady = true;
+      this.resizeShader();
+      this.renderShader();
+    });
   }
 
   private resizeShader(): void {
@@ -221,6 +238,11 @@ export class ReleaseCoverShader implements OnDestroy {
   };
 
   private teardownShader(): void {
+    if (this.readyFrameId !== null) {
+      window.cancelAnimationFrame(this.readyFrameId);
+      this.readyFrameId = null;
+    }
+
     window.removeEventListener('resize', this.handleWindowResize);
 
     if (!this.releaseShaderState) {
