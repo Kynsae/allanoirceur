@@ -46,6 +46,14 @@
     }
 }
 
+@media (max-width: 690px) {
+    .loaded {
+        .loader {
+            animation: 0.7s logo-disappear-mobile ease-in-out forwards;
+        }
+    }
+}
+
 @keyframes logo-disappear {
     90% {
         top: 45px;
@@ -58,6 +66,28 @@
     100% {
         opacity: 0;
         top: 45px;
+        pointer-events: none;
+    }
+}
+
+@keyframes logo-disappear-mobile {
+    90% {
+        height: 40px;
+        top: 45px;
+        left: var(--space-lg);
+        transform: translate(0, -50%);
+    }
+
+    99% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        height: 40px;
+        top: 45px;
+        left: var(--space-lg);
+        transform: translate(0, -50%);
         pointer-events: none;
     }
 }

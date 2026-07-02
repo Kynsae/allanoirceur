@@ -1,17 +1,39 @@
 <div class="container">
-    <nav routerLink="/records">
+    <nav class="desktop-nav" routerLink="/records">
         <app-text-hover-slide
             text="RECORDS"
             [underline]="false"
         ></app-text-hover-slide>
     </nav>
 
-    <img [style.height.px]="lerp(60, 40, 1, 0.4)" routerLink="/" class="logo-img" src="icons/logo.svg" alt="Home">
+    <img [style.height.px]="lerp(60, 40, 1, 0.4)" routerLink="/" class="logo-img desktop-logo" src="icons/logo.svg" alt="Home">
+    <img routerLink="/" class="logo-img mobile-logo" src="icons/logo.svg" alt="Home">
 
-    <nav routerLink="contact">
+    <nav class="desktop-nav" routerLink="contact">
         <app-text-hover-slide
             text="CONTACT"
             [underline]="false"
         ></app-text-hover-slide>
     </nav>
+
+    <div [class.mobile-menu-open]="showMobileContainer()" (click)="openMobileContainer()" class="mobile-menu">
+        <p class="real">MENU</p>
+        <p class="ghost">CLOSE</p>
+    </div>
+</div>
+
+<div [class.show-mobile-container]="showMobileContainer()" class="mobile-container">
+    <div class="routes-list">
+        <nav class="mobile-nav" routerLink="" (click)="closeMobileContainer()">
+            <p>HOME</p>
+        </nav>
+
+        <nav class="mobile-nav" routerLink="records" (click)="closeMobileContainer()">
+            <p style="transition-delay: 0.1s">RECORDS</p>
+        </nav>
+
+        <nav class="mobile-nav" >
+            <p style="transition-delay: 0.2s">CONTACT</p>
+        </nav>
+    </div>
 </div>
