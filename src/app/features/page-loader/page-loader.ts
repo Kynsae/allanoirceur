@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, isStandalone, signal } from '@angular/core';
 
 @Component({
   selector: 'app-page-loader',
@@ -7,11 +7,17 @@ import { Component, signal } from '@angular/core';
   styleUrl: './page-loader.scss',
 })
 export class PageLoader {
-  public readonly isLoaded = signal(false);
+  public readonly loadingPercentage = signal<number>(0);
 
   constructor() {
+    this.load();
+  }
+
+  load() {
     setTimeout(() => {
-      this.isLoaded.set(true);
-    }, 1000)
+      this.loadingPercentage.set(this.loadingPercentage() + 10);
+      if (this.loadingPercentage() >= 100) return;
+      this.load();
+    }, 1000);
   }
 }
