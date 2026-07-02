@@ -1,6 +1,8 @@
 .container {
     position: fixed;
-    width: 100vw;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 90px;
 
     display: flex;
@@ -15,8 +17,8 @@
 .logo-img {
     position: absolute;
     left: 50%;
+    height: 60px;
     transform: translateX(-50%);
-    will-change: height;
     cursor: pointer;
 
     transition: transform 0.1s ease-in-out;
@@ -29,4 +31,5 @@
 nav {
     cursor: pointer;
     font-size: 26px;
+    flex-shrink: 0;
 }
