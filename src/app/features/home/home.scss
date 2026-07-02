@@ -80,7 +80,7 @@
     position: relative;
     height: 100vh;
     width: 100%;
-    margin-bottom: 30vh;
+    margin-bottom: 10vh;
 }
 
 .latest-release-featured-album {
@@ -119,7 +119,7 @@
 
 @media (max-width: 900px) {
     .latest-release-featured-album {
-        width: min(72vw, 420px);
+        width: min(calc(100vw - (var(--space-lg) * 2)), 420px);
     }
 
     .latest-release-links-container {
