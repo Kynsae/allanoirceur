@@ -6,11 +6,39 @@
     height: 100vh;
     background-color: black;
     z-index: 100;
+    display: grid;
+    place-items: center;
+}
+
+.loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: min(32rem, calc(100vw - 3rem));
 }
 
 .logo {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    width: 100%;
+    height: auto;
+}
+
+.logo__base {
+    fill: rgb(255 255 255 / 0.12);
+}
+
+.logo__fill {
+    fill: #ff3b30;
+    filter: drop-shadow(0 0 18px rgb(255 59 48 / 0.35));
+}
+
+.logo__clip-rect {
+    transition: width 200ms ease;
+}
+
+.percentage {
+    color: white;
+    font-size: 0.875rem;
+    letter-spacing: 0.35rem;
+    text-transform: uppercase;
 }

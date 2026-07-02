@@ -1,4 +1,4 @@
-import { Component, isStandalone, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 
 @Component({
   selector: 'app-page-loader',
@@ -8,14 +8,15 @@ import { Component, isStandalone, signal } from '@angular/core';
 })
 export class PageLoader {
   public readonly loadingPercentage = signal<number>(0);
+  public readonly fillWidth = computed(() => (353 * this.loadingPercentage()) / 100);
 
   constructor() {
     this.load();
   }
 
-  load() {
+  private load(): void {
     setTimeout(() => {
-      this.loadingPercentage.set(this.loadingPercentage() + 10);
+      this.loadingPercentage.update((value) => Math.min(value + 10, 100));
       if (this.loadingPercentage() >= 100) return;
       this.load();
     }, 1000);
