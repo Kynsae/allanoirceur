@@ -30,6 +30,9 @@ export class ReleaseCoverShader implements OnDestroy {
   @ViewChild('coverStack')
   private readonly coverStack?: ElementRef<HTMLDivElement>;
 
+  @ViewChild('fallbackImage')
+  private readonly fallbackImage?: ElementRef<HTMLImageElement>;
+
   public readonly imageSrc = input.required<string>();
   public readonly imageAlt = input<string>('');
   public readonly progress = input(0);
@@ -37,7 +40,7 @@ export class ReleaseCoverShader implements OnDestroy {
   private releaseShaderState: ReleaseShaderState | null = null;
   private readonly handleWindowResize = () => this.resizeShader();
   private readyFrameId: number | null = null;
-  public shaderReady = false;
+  private shaderReady = false;
 
   constructor() {
     afterNextRender(() => {
@@ -180,6 +183,8 @@ export class ReleaseCoverShader implements OnDestroy {
       }
 
       this.shaderReady = true;
+      this.shaderCanvas?.nativeElement.classList.add('release-cover-shader--ready');
+      this.fallbackImage?.nativeElement.classList.add('release-cover-fallback--hidden');
       this.resizeShader();
       this.renderShader();
     });

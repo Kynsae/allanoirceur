@@ -27,7 +27,7 @@ export class Footer implements OnDestroy {
   public readonly SOCIAL_LINKS = SOCIAL_LINKS;
 
   public readonly logoTransform = computed(() => {
-    const offset = this.lerpOffset(-170, 110, 0, 0);
+    const offset = this.lerpOffset(-170, 30, 0, 0, 'ease-out');
     const pixelRatio = typeof window === 'undefined' ? 1 : (window.devicePixelRatio || 1);
     const snappedOffset = Math.round(offset * pixelRatio) / pixelRatio;
 

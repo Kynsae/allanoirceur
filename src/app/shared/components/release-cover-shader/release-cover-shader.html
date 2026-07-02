@@ -2,13 +2,12 @@
     <canvas
         #shaderCanvas
         class="release-cover-shader"
-        [class.release-cover-shader--ready]="shaderReady"
         aria-hidden="true"
     ></canvas>
 
     <img
+        #fallbackImage
         class="release-cover-fallback"
-        [class.release-cover-fallback--hidden]="shaderReady"
         [src]="imageSrc()"
         [alt]="imageAlt()"
     >
