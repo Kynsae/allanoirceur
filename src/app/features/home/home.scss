@@ -121,6 +121,10 @@
     text-align: center;
 }
 
+.events-container-title-mobile {
+    display: none;
+}
+
 @media (max-width: 900px) {
     .latest-release-featured-album {
         width: min(calc(100vw - (var(--space-lg) * 2)), 420px);
@@ -146,10 +150,17 @@
     }
 
     .events-container-title {
+        display: none;
+    }
+
+    .events-container-title-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         width: 100%;
-        
-        h1 {
-            font-size: 9.4vw;
-        }
+        text-align: center;
+        font-size: 9.3vw;
+        white-space: nowrap;
     }
 }
