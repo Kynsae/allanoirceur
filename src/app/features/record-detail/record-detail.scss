@@ -1,0 +1,77 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+}
+
+.cover {
+    height: 55vh;
+    max-width: 100vw;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.cover-ghost {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(1.4);
+    filter: blur(50px);
+    z-index: 0;
+}
+
+.links-container {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 20px;
+    opacity: 0.6;
+}
+
+.back-button {
+    position: absolute;
+    left: var(--space-lg);
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.songs-name-list {
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    padding: var(--space-lg);
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+@media (max-width: 780px) {
+    .cover {
+        height: auto;
+        width: calc(100vw - var(--space-lg) * 2);
+    }
+
+    .links-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

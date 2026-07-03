@@ -4,6 +4,7 @@ import { ScrollManager } from '../../core/services/scroll-manager';
 import { Viewport } from '../../core/services/viewport';
 import { ScrollTextReel } from '../../shared/components/scroll-text-reel/scroll-text-reel';
 import { RECORDS } from '../../core/datas/records.data';
+import { RouterLink } from "@angular/router";
 
 interface RecordTextTransition {
   fromIndex: number;
@@ -15,8 +16,9 @@ interface RecordTextTransition {
 @Component({
   selector: 'app-records',
   imports: [
-    ScrollTextReel
-  ],
+    ScrollTextReel,
+    RouterLink
+],
   templateUrl: './records.html',
   styleUrl: './records.scss',
 })

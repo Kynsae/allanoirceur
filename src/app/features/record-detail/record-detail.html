@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="cover">
+        <img [src]="activeRecord()?.coverUrl" [alt]="activeRecord()?.name">
+        
+        <div class="links-container">
+            @for (link of activeRecord()?.links; track $index) {
+                <app-link-preview
+                    [link]="link"
+                ></app-link-preview>
+            }
+        </div>
+    </div>
+
+    <img class="cover cover-ghost" [src]="activeRecord()?.coverUrl" [alt]="activeRecord()?.name">
+
+    <!-- <div class="back-button">
+        <img src="icons/arrow-left.svg" alt="Go back">
+        
+        <p>GO BACK</p>
+    </div> -->
+</div>
+
+<div class="songs-name-list">
+    @for (song of activeRecord()?.songs; track $index) {
+        <p>{{ song }}</p>
+    }
+</div>

@@ -23,14 +23,14 @@
         </div>
 
         @for (record of RECORDS; track $index) {
-            <article class="record-item">
+            <div [routerLink]="['/records', record.id]" class="record-item">
                 <img #recordCover class="record-cover" [src]="record.coverUrl" [alt]="record.name" (load)="onCoverLoad()">
 
                 <div class="mobile-record-infos">
                     <p class="mobile-record-name">{{ record.name }}</p>
                     <p class="mobile-record-year">{{ record.releaseYear }}</p>
                 </div>
-            </article>
+            </div>
         }
 
         <div class="record-infos right-infos" [style.opacity]="infosOpacity()">

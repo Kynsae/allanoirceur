@@ -85,6 +85,8 @@ nav {
     align-items: center;
     justify-content: center;
 
+    pointer-events: none;
+
     .routes-list {
         width: 100%;
         text-align: center;
@@ -107,6 +109,7 @@ nav {
 
 .show-mobile-container {
     opacity: 1;
+    pointer-events: all;
 
     .mobile-nav {
         p {
